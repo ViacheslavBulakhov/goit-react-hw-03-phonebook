@@ -14,9 +14,6 @@ export class App extends React.Component {
       {id: 'id-4', name: 'Annie Copeland', number: '227-91-26'} 
     ],
     filter: '',
-    name: '',
-    number: '',
-
   }
 
   handleSubmit = (value,{resetForm}) => {
@@ -34,17 +31,9 @@ export class App extends React.Component {
       this.setState({filter: ''})
       return      
     }
-      const {contacts} = this.state;
+    const {contacts} = this.state;
 
-    const filteredContact = contacts.filter(contact =>  { 
-        const {name} = contact;
-        const validName = name.toLowerCase();
-        const validValue = value.toLowerCase();
-
-      if(validName.includes(validValue)){
-        return contact;
-      }
-    })
+    const filteredContact = contacts.filter(contact =>  (contact.name.toLowerCase().includes(value.toLowerCase())))
     this.setState({ filter: [...filteredContact]})
   }
 

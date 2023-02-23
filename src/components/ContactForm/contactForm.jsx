@@ -1,5 +1,7 @@
 import React from "react";
 import { Formik, Field, Form } from 'formik';
+import {RegisterForm, Label} from './contactFrom.styled'
+
 
 export function ContactForm ({handleSubmit}) {
    const initialValues = {
@@ -11,8 +13,8 @@ export function ContactForm ({handleSubmit}) {
         initialValues={initialValues}
         onSubmit={handleSubmit}
       >
-        <Form>
-          <label htmlFor="name">Name</label>
+        <RegisterForm>
+          <Label htmlFor="name">Name</Label>
           <Field 
             id='name'    
             type="text" 
@@ -21,7 +23,7 @@ export function ContactForm ({handleSubmit}) {
             title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
             required />
 
-          <label htmlFor="name">Number</label>
+          <Label htmlFor="name">Number</Label>
           <Field 
             type="tel"
             name="number"
@@ -29,7 +31,7 @@ export function ContactForm ({handleSubmit}) {
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
             required />
           <button type="submit">Submit</button>
-        </Form>
+        </RegisterForm>
       </Formik>
     )
     

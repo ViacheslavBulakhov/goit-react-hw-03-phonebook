@@ -15,56 +15,58 @@ export class App extends React.Component {
     filter: '',
   };
 
-  handleSubmit = (value, { resetForm }) => {
-    if (this.checkOfValidContact(value)) {
-      alert(`${value.name} is olready in contacts.`);
+  addContact = contact => {
+    if (this.checkOfValidContact(contact)) {
+      alert(`${contact.name} is olready in contacts.`);
       return;
     }
-    const id = uuidv4();
-    const contact = { ...value, id };
+
     this.setState(prevState => ({
-      contacts: [contact, ...prevState.contacts],
+      contacts: [{ ...contact, id: uuidv4() }, ...prevState.contacts],
     }));
-    resetForm();
   };
-  elementDelete = id => {
+
+  contactDelete = id => {
     this.setState(prevState => ({
       contacts: prevState.contacts.filter(contact => contact.id !== id),
     }));
   };
-  findContact = value => {
-    if (value === '') {
-      this.setState({ filter: '' });
-      return;
-    }
-    const { contacts } = this.state;
 
-    const filteredContact = contacts.filter(contact =>
-      contact.name.toLowerCase().includes(value.toLowerCase())
-    );
-    this.setState({ filter: [...filteredContact] });
+  changeFilter = value => {
+    this.setState({ filter: value });
   };
+
+  getFilteredContacts = () => {
+    const { contacts, filter } = this.state;
+
+    return contacts.filter(({ name }) =>
+      name.toLowerCase().includes(filter.toLowerCase())
+    );
+  };
+
   checkOfValidContact = value =>
-    this.state.contacts.find(contact => contact.name === value.name);
+    this.state.contacts.find(
+      contact => contact.name.toLowerCase() === value.name.toLowerCase()
+    );
 
   render() {
     return (
       <div>
         <h1>PhoneBook</h1>
-        <ContactForm handleSubmit={this.handleSubmit} />
+        <ContactForm addContact={this.addContact} />
 
         <h2>Contacts</h2>
-        <Filter findContact={this.findContact} />
-        {this.state.filter === '' ? (
-          <ContactList
-            contacts={this.state.contacts}
-            elementDelete={this.elementDelete}
-          />
+
+        {this.state.contacts.length > 0 ? (
+          <>
+            <Filter changeFilter={this.changeFilter} />
+            <ContactList
+              contacts={this.getFilteredContacts()}
+              contactDelete={this.contactDelete}
+            />
+          </>
         ) : (
-          <ContactList
-            contacts={this.state.filter}
-            elementDelete={this.elementDelete}
-          />
+          <p>You have no contacts on phonebook yet</p>
         )}
       </div>
     );

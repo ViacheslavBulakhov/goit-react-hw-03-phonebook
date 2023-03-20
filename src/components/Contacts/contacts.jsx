@@ -2,7 +2,7 @@ import React from 'react';
 import { ContactElement } from './contacts.styled';
 import PropTypes from 'prop-types';
 
-export function ContactList({ contacts, elementDelete }) {
+export function ContactList({ contacts, contactDelete }) {
   return (
     <>
       <ul>
@@ -10,11 +10,7 @@ export function ContactList({ contacts, elementDelete }) {
           <ContactElement key={contact.id}>
             <span>{contact.name}: </span>
             <span>{contact.number} </span>
-            <button
-              type="button"
-              name={contact.id}
-              onClick={() => elementDelete(contact.id)}
-            >
+            <button type="button" onClick={() => contactDelete(contact.id)}>
               Delete
             </button>
           </ContactElement>
@@ -23,6 +19,7 @@ export function ContactList({ contacts, elementDelete }) {
     </>
   );
 }
+
 ContactList.propTypes = {
   contacts: PropTypes.arrayOf(
     PropTypes.shape({
@@ -31,5 +28,5 @@ ContactList.propTypes = {
       number: PropTypes.string.isRequired,
     }).isRequired
   ).isRequired,
-  elementDelete: PropTypes.func.isRequired,
+  contactDelete: PropTypes.func.isRequired,
 };

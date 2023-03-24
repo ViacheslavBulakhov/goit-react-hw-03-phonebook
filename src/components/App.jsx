@@ -1,38 +1,48 @@
-import React from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import { ContactForm } from './ContactForm/contactForm';
-import { ContactList } from './Contacts/contacts';
-import { Filter } from './Filter/filter';
+import React from "react";
+import { v4 as uuidv4 } from "uuid";
+import { ContactForm } from "./ContactForm/contactForm";
+import { ContactList } from "./Contacts/contacts";
+import { Filter } from "./Filter/filter";
 
 export class App extends React.Component {
   state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
-    filter: '',
+    contacts: [],
+    filter: "",
   };
 
-  addContact = contact => {
+  addContact = async (contact) => {
     if (this.checkOfValidContact(contact)) {
       alert(`${contact.name} is olready in contacts.`);
       return;
     }
 
-    this.setState(prevState => ({
+    await this.setState((prevState) => ({
       contacts: [{ ...contact, id: uuidv4() }, ...prevState.contacts],
     }));
+
+    this.LSContactsListControl();
   };
 
-  contactDelete = id => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== id),
+  contactDelete = async (id) => {
+    await this.setState((prevState) => ({
+      contacts: prevState.contacts.filter((contact) => contact.id !== id),
     }));
+    this.LSContactsListControl();
   };
 
-  changeFilter = value => {
+  LSContactsListControl = () => {
+    localStorage.setItem("contacts", JSON.stringify([...this.state.contacts]));
+  };
+
+  componentDidMount() {
+    if (localStorage.getItem("contacts")) {
+      this.setState({
+        contacts: [...JSON.parse(localStorage.getItem("contacts"))],
+      });
+    }
+  }
+
+  changeFilter = (value) => {
     this.setState({ filter: value });
   };
 
@@ -44,9 +54,9 @@ export class App extends React.Component {
     );
   };
 
-  checkOfValidContact = value =>
+  checkOfValidContact = (value) =>
     this.state.contacts.find(
-      contact => contact.name.toLowerCase() === value.name.toLowerCase()
+      (contact) => contact.name.toLowerCase() === value.name.toLowerCase()
     );
 
   render() {

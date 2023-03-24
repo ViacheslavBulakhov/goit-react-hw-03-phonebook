@@ -1,48 +1,49 @@
-import React from "react";
-import { v4 as uuidv4 } from "uuid";
-import { ContactForm } from "./ContactForm/contactForm";
-import { ContactList } from "./Contacts/contacts";
-import { Filter } from "./Filter/filter";
+import React from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { ContactForm } from './ContactForm/contactForm';
+import { ContactList } from './Contacts/contacts';
+import { Filter } from './Filter/filter';
 
 export class App extends React.Component {
   state = {
     contacts: [],
-    filter: "",
+    filter: '',
   };
 
-  addContact = async (contact) => {
+  addContact = async contact => {
     if (this.checkOfValidContact(contact)) {
       alert(`${contact.name} is olready in contacts.`);
       return;
     }
 
-    await this.setState((prevState) => ({
+    await this.setState(prevState => ({
       contacts: [{ ...contact, id: uuidv4() }, ...prevState.contacts],
     }));
 
     this.LSContactsListControl();
   };
 
-  contactDelete = async (id) => {
-    await this.setState((prevState) => ({
-      contacts: prevState.contacts.filter((contact) => contact.id !== id),
+  contactDelete = async id => {
+    await this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== id),
     }));
     this.LSContactsListControl();
   };
 
   LSContactsListControl = () => {
-    localStorage.setItem("contacts", JSON.stringify([...this.state.contacts]));
+    localStorage.setItem('contacts', JSON.stringify([...this.state.contacts]));
   };
 
   componentDidMount() {
-    if (localStorage.getItem("contacts")) {
+    console.log(2);
+    if (localStorage.getItem('contacts')) {
       this.setState({
-        contacts: [...JSON.parse(localStorage.getItem("contacts"))],
+        contacts: [...JSON.parse(localStorage.getItem('contacts'))],
       });
     }
   }
 
-  changeFilter = (value) => {
+  changeFilter = value => {
     this.setState({ filter: value });
   };
 
@@ -54,9 +55,9 @@ export class App extends React.Component {
     );
   };
 
-  checkOfValidContact = (value) =>
+  checkOfValidContact = value =>
     this.state.contacts.find(
-      (contact) => contact.name.toLowerCase() === value.name.toLowerCase()
+      contact => contact.name.toLowerCase() === value.name.toLowerCase()
     );
 
   render() {

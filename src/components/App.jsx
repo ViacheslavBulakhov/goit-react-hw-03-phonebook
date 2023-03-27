@@ -27,6 +27,7 @@ export class App extends React.Component {
     await this.setState(prevState => ({
       contacts: prevState.contacts.filter(contact => contact.id !== id),
     }));
+
     this.LSContactsListControl();
   };
 
@@ -35,7 +36,6 @@ export class App extends React.Component {
   };
 
   componentDidMount() {
-    console.log(12);
     if (localStorage.getItem('contacts')) {
       this.setState({
         contacts: [...JSON.parse(localStorage.getItem('contacts'))],

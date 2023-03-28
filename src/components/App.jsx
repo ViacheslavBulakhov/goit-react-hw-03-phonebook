@@ -10,6 +10,20 @@ export class App extends React.Component {
     filter: '',
   };
 
+  componentDidMount() {
+    if (localStorage.getItem('contacts')) {
+      this.setState({
+        contacts: [...JSON.parse(localStorage.getItem('contacts'))],
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      this.LSContactsListControl();
+    }
+  }
+
   addContact = async contact => {
     if (this.checkOfValidContact(contact)) {
       alert(`${contact.name} is olready in contacts.`);
@@ -19,29 +33,22 @@ export class App extends React.Component {
     await this.setState(prevState => ({
       contacts: [{ ...contact, id: uuidv4() }, ...prevState.contacts],
     }));
-
-    this.LSContactsListControl();
   };
+
+  checkOfValidContact = value =>
+    this.state.contacts.find(
+      contact => contact.name.toLowerCase() === value.name.toLowerCase()
+    );
 
   contactDelete = async id => {
     await this.setState(prevState => ({
       contacts: prevState.contacts.filter(contact => contact.id !== id),
     }));
-
-    this.LSContactsListControl();
   };
 
   LSContactsListControl = () => {
     localStorage.setItem('contacts', JSON.stringify([...this.state.contacts]));
   };
-
-  componentDidMount() {
-    if (localStorage.getItem('contacts')) {
-      this.setState({
-        contacts: [...JSON.parse(localStorage.getItem('contacts'))],
-      });
-    }
-  }
 
   changeFilter = value => {
     this.setState({ filter: value });
@@ -54,11 +61,6 @@ export class App extends React.Component {
       name.toLowerCase().includes(filter.toLowerCase())
     );
   };
-
-  checkOfValidContact = value =>
-    this.state.contacts.find(
-      contact => contact.name.toLowerCase() === value.name.toLowerCase()
-    );
 
   render() {
     return (
